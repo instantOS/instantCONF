@@ -1,2 +1,2 @@
-# instantCONFIG
+# instantCONF
 settings manager for instantOS
