@@ -1,5 +1,9 @@
 #!/bin/bash
 
+###########################################
+## Simple settings manager for instantOS ##
+###########################################
+
 if [ "$1" = "-b" ]; then
     shift
     BINARY=True
@@ -8,13 +12,37 @@ fi
 if [ -z "$2" ]; then
     ACTION=GET
 else
-    ACTION="$2"
+    ACTION="$1"
     shift
 fi
+
+sq() {
+    sqlite3 ~/.config/instantos/settings.db "$1"
+}
 
 # initialize new settings
 if ! [ -e ~/.config/instantos/settings.db ]; then
     echo "initializing settings"
     mkdir -p ~/.config/instantos
-    sqlite3 ~/.config/instantos/settings.db 'CREATE TABLE "settings" ("setting" TEXT, "value" TEXT);'
+    sq 'CREATE TABLE "settings" ("setting" TEXT constraint_name PRIMARY KEY, "value" TEXT);'
 fi
+
+case "$ACTION" in
+set)
+    if [ -n "$2" ]; then
+        sq 'REPLACE INTO settings (setting, value) VALUES ("'"$1"'", "'"$2"'")'
+    fi
+    ;;
+*)
+    if [ -z "$BINARY" ]; then
+        sq 'SELECT value FROM settings WHERE setting="'"$1"'"'
+    else
+        VALUE=$(sq 'SELECT value FROM settings WHERE setting="'"$1"'"')
+        if [ "$VALUE" = "1" ]; then
+            return 0
+        else
+            return 1
+        fi
+    fi
+    ;;
+esac
