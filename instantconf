@@ -1,0 +1,20 @@
+#!/bin/bash
+
+if [ "$1" = "-b" ]; then
+    shift
+    BINARY=True
+fi
+
+if [ -z "$2" ]; then
+    ACTION=GET
+else
+    ACTION="$2"
+    shift
+fi
+
+# initialize new settings
+if ! [ -e ~/.config/instantos/settings.db ]; then
+    echo "initializing settings"
+    mkdir -p ~/.config/instantos
+    sqlite3 ~/.config/instantos/settings.db 'CREATE TABLE "settings" ("setting" TEXT, "value" TEXT);'
+fi
