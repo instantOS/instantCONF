@@ -4,21 +4,27 @@
 ## Simple settings manager for instantOS ##
 ###########################################
 
-if [ "$1" = "-b" ]; then
-    shift
-    BINARY=True
-fi
-
-if [ -z "$2" ]; then
-    ACTION=GET
-else
-    ACTION="$1"
-    shift
-fi
-
 sq() {
     sqlite3 ~/.config/instantos/settings.db "$1"
 }
+
+case "$1" in
+-b)
+    shift
+    BINARY=True
+    ;;
+-h)
+    echo "usage:"
+    echo "get setting: iconf setting"
+    echo "set setting: iconf setting value"
+    echo ""
+    exit
+    ;;
+all)
+    sq 'SELECT * FROM SETTINGS'
+    exit
+    ;;
+esac
 
 # initialize new settings
 if ! [ -e ~/.config/instantos/settings.db ]; then
@@ -26,13 +32,9 @@ if ! [ -e ~/.config/instantos/settings.db ]; then
     sq 'CREATE TABLE "settings" ("setting" TEXT constraint_name PRIMARY KEY, "value" TEXT);'
 fi
 
-case "$ACTION" in
-set)
-    if [ -n "$2" ]; then
-        sq 'REPLACE INTO settings (setting, value) VALUES ("'"$1"'", "'"$2"'")'
-    fi
-    ;;
-*)
+if [ -n "$2" ]; then
+    sq 'REPLACE INTO settings (setting, value) VALUES ("'"$1"'", "'"$2"'")'
+else
     if [ -z "$BINARY" ]; then
         VALUE=$(sq 'SELECT value FROM settings WHERE setting="'"$1"'"')
         if [ -z "$VALUE" ]; then
@@ -48,5 +50,4 @@ set)
             exit 1
         fi
     fi
-    ;;
-esac
+fi
