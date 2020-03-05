@@ -22,7 +22,6 @@ sq() {
 
 # initialize new settings
 if ! [ -e ~/.config/instantos/settings.db ]; then
-    echo "initializing settings"
     mkdir -p ~/.config/instantos
     sq 'CREATE TABLE "settings" ("setting" TEXT constraint_name PRIMARY KEY, "value" TEXT);'
 fi
@@ -35,13 +34,18 @@ set)
     ;;
 *)
     if [ -z "$BINARY" ]; then
-        sq 'SELECT value FROM settings WHERE setting="'"$1"'"'
+        VALUE=$(sq 'SELECT value FROM settings WHERE setting="'"$1"'"')
+        if [ -z "$VALUE" ]; then
+            exit 1
+        else
+            echo "$VALUE"
+        fi
     else
         VALUE=$(sq 'SELECT value FROM settings WHERE setting="'"$1"'"')
         if [ "$VALUE" = "1" ]; then
-            return 0
+            exit 0
         else
-            return 1
+            exit 1
         fi
     fi
     ;;
