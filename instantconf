@@ -30,6 +30,8 @@ esac
 if ! [ -e ~/.config/instantos/settings.db ]; then
     mkdir -p ~/.config/instantos
     sq 'CREATE TABLE "settings" ("setting" TEXT constraint_name PRIMARY KEY, "value" TEXT);'
+    # default settings
+    sq 'INSERT INTO settings (setting, value) VALUES ("welcome", "1")' # startup welcome app
 fi
 
 if [ -n "$2" ]; then
