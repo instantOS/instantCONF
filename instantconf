@@ -58,9 +58,21 @@ if [ -n "$2" ]; then
     sq 'REPLACE INTO settings (setting, value) VALUES ("'"$1"'", "'"$2"'")'
 else
     if [ -z "$BINARY" ]; then
-        VALUE=$(sq 'SELECT value FROM settings WHERE setting="'"$1"'"')
+        # setting:default returns something even if there's no entry in the database
+        if [[ "$1" =~ ":" ]]; then
+            SETTING="${1%:*}"
+            DEFAULT="${1#*:}"
+        else
+            SETTING="$1"
+        fi
+
+        VALUE=$(sq 'SELECT value FROM settings WHERE setting="'"$SETTING"'"')
         if [ -z "$VALUE" ]; then
-            exit 1
+            if [ -z "$DEFAULT" ]; then
+                exit 1
+            else
+                echo "$DEFAULT"
+            fi
         else
             echo "$VALUE"
         fi
