@@ -9,7 +9,7 @@ sq() {
 }
 
 case "$1" in
--b)
+-b) # 1 or 0 to exit code
     shift
     BINARY=True
     ;;
@@ -19,6 +19,26 @@ case "$1" in
     echo "set setting: iconf setting value"
     echo ""
     exit
+    ;;
+-i)
+    # test -e for indicator files is faster than firing up sqlite
+    shift
+    if ! [ -e "$HOME"/.config/iconf ]; then
+        mkdir "$HOME"/.config/iconf
+        if [ -z "$2" ]; then
+            exit 1
+        fi
+    fi
+
+    if [ -z "$2" ]; then
+        if [ -e "$HOME"/.config/iconf/"$1" ]; then
+            exit 0
+        fi
+    else
+        if ! [ -e "$HOME"/.config/iconf/"$1" ]; then
+            touch "$HOME"/.config/iconf/"$1"
+        fi
+    fi
     ;;
 all)
     sq 'SELECT * FROM SETTINGS'
