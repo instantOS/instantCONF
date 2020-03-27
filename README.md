@@ -20,9 +20,9 @@ instantCONF is a simple configuration system that doesn't require a settings dae
 Get the value of a setting option  
 Prints the value to stdout. 
 Exits with exit code 1 if the option is not set
-´´´
+```
 iconf optionname
-´´´
+```
 
 Set an option
 ´´´
@@ -33,9 +33,9 @@ binary options:
 
 Get a binary option. doesn't print to stdout and instead exits with exit code 0 if option is true and 1 if the option is set to false. 
 Defaults to false (exit status 1)
-´´´
+```
 iconf -i optionname
-´´´
+```
 
 set a binary option. 
 ```
