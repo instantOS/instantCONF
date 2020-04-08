@@ -46,6 +46,20 @@ case "$1" in
         fi
     fi
     ;;
+
+-f)
+    # store in files instead of sqlite
+    shift 1
+    if [ -z "$2" ]; then
+        if [ -e ~/.config/instantconf/"$1" ]; then
+            cat ~/.config/instantconf/"$1"
+        else
+            exit 1
+        fi
+    else
+        echo "$2" >~/.config/instantconf/"$1"
+    fi
+    ;;
 all)
     sq 'SELECT * FROM SETTINGS'
     exit
