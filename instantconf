@@ -20,6 +20,12 @@ case "$1" in
     echo ""
     exit
     ;;
+-d)
+    # delete an option
+    if [ -n "$2" ]; then
+        sq 'DELETE * FROM settings WHERE setting='"$2"
+    fi
+    ;;
 -i)
     # test -e for indicator files is faster than firing up sqlite
     shift
