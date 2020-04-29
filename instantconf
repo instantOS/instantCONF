@@ -27,27 +27,26 @@ case "$1" in
     fi
     ;;
 -i)
-    # test -e for indicator files is faster than firing up sqlite
-    shift
-    if ! [ -e "$HOME"/.config/iconf ]; then
-        mkdir "$HOME"/.config/iconf
-        if [ -z "$2" ]; then
-            exit 1
+    # use indicator files
+    [ -z "$2" ] && exit 1
+    if [ -n "$3" ]; then
+        if [ "$3" = "0" ]; then
+            if [ -e ~/.config/iconf/"$2" ]; then
+                rm ~/.config/iconf/"$2"
+            fi
+        else
+            if ! [ -e ~/.config/iconf ]; then
+                mkdir -p ~/.config/iconf
+            fi
+            if ! [ -e ~/.config/iconf/"$2" ]; then
+                touch ~/.config/iconf/"$2"
+            fi
         fi
-    fi
-
-    if [ -z "$2" ]; then
-        if [ -e "$HOME"/.config/iconf/"$1" ]; then
-            exit 0
-        fi
+        exit 0
     else
-        if ! [ -e "$HOME"/.config/iconf/"$1" ]; then
-            touch "$HOME"/.config/iconf/"$1"
-        elif [ "$2" = "0" ]; then
-            rm "$HOME"/.config/iconf/"$1"
-            exit
-        fi
+        [ -e ~/.config/iconf/"$2" ] && exit 0
     fi
+    exit 1
     ;;
 
 -f)
