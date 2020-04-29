@@ -43,6 +43,9 @@ case "$1" in
     else
         if ! [ -e "$HOME"/.config/iconf/"$1" ]; then
             touch "$HOME"/.config/iconf/"$1"
+        elif [ "$2" = "0" ]; then
+            rm "$HOME"/.config/iconf/"$1"
+            exit
         fi
     fi
     ;;
