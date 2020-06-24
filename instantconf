@@ -17,13 +17,14 @@ case "$1" in
     echo "usage:"
     echo "get setting: iconf setting"
     echo "set setting: iconf setting value"
+    echo "clear setting: iconf -d setting"
     echo ""
     exit
     ;;
 -d)
     # delete an option
     if [ -n "$2" ]; then
-        sq 'DELETE * FROM settings WHERE setting='"$2"
+        sq 'DELETE FROM settings WHERE setting="'"$2"'"'
     fi
     ;;
 -i)
