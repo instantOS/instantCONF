@@ -1,7 +1,7 @@
 <div align="center">
     <h1>instantCONF</h1>
     <p>simple config system for instantOS</p>
-    <img width="300" height="300" src="https://raw.githubusercontent.com/instantOS/instantLOGO/master/png/conf.png">
+    <img width="300" height="300" src="https://media.githubusercontent.com/media/instantOS/instantLOGO/master/png/conf.png">
 </div>
 
 <p align="left">
