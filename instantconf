@@ -63,6 +63,23 @@ case "$1" in
         echo "$2" >~/.config/instantconf/"$1"
     fi
     ;;
+-r)
+    shift 1
+    if [ -z "$1" ]
+    then
+        echo "usage: iroot -r name"
+        echo "gets an iroot value from the installer"
+        exit
+    fi
+    # get iroot config
+    if [ -e /etc/iroot/"$1" ]
+    then
+        cat /etc/iroot/"$1"
+        exit 0
+    else
+        exit 1
+        fi
+    ;;
 all)
     sq 'SELECT * FROM SETTINGS'
     exit
