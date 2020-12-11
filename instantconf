@@ -65,20 +65,18 @@ case "$1" in
     ;;
 -r)
     shift 1
-    if [ -z "$1" ]
-    then
+    if [ -z "$1" ]; then
         echo "usage: iroot -r name"
         echo "gets an iroot value from the installer"
         exit
     fi
     # get iroot config
-    if [ -e /etc/iroot/"$1" ]
-    then
+    if [ -e /etc/iroot/"$1" ]; then
         cat /etc/iroot/"$1"
         exit 0
     else
         exit 1
-        fi
+    fi
     ;;
 all)
     sq 'SELECT * FROM SETTINGS'
@@ -94,8 +92,13 @@ if ! [ -e ~/.config/instantos/settings.db ]; then
     sq 'INSERT INTO settings (setting, value) VALUES ("welcome", "1")' # startup welcome app
 fi
 
+
 if [ -n "$2" ]; then
-    sq 'REPLACE INTO settings (setting, value) VALUES ("'"$1"'", "'"$2"'")'
+    if [[ $2 == *'"'* ]]; then
+        sq 'REPLACE INTO settings (setting, value) VALUES ("'"$1"'", "'"$(sed 's/"/""/g' <<<"$2")"'")'
+    else
+        sq 'REPLACE INTO settings (setting, value) VALUES ("'"$1"'", "'"$2"'")'
+    fi
 else
     if [ -z "$BINARY" ]; then
         # setting:default returns something even if there's no entry in the database
