@@ -87,7 +87,7 @@ all)
     sq 'SELECT * FROM SETTINGS'
     exit
     ;;
-*)
+"")
     echohelp
     ;;
 esac
