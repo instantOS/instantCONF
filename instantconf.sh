@@ -9,12 +9,32 @@ sq() {
 }
 
 echohelp() {
-    echo "usage:"
-    echo "get setting: iconf setting"
-    echo "set setting: iconf setting value"
-    echo "get installer setting: iconf -r value"
-    echo "clear setting: iconf -d setting"
-    echo ""
+    echo "usage: iconf [arguments]
+iconf <settingname>
+    get setting value
+iconf <setting> <value>
+    set setting to value
+iconf -r <value>
+    get setting from installer
+iconf -d <setting>
+    clear a setting value
+iconf -a
+    print all settings
+iconf -i
+    binary settings using indicator files
+    iconf -i <setting>
+        get setting value as exit code
+    iconf -i <setting> 0/1
+        set setting to off/on
+iconf -e <output>
+    export all settings to output file
+iconf -i <file>
+    import setting file
+iconf --help
+    show this message
+iconf --version
+    TODO
+"
     exit
 }
 
@@ -25,12 +45,14 @@ case "$1" in
     ;;
 -h)
     echohelp
+    exit
     ;;
 -d)
     # delete an option
     if [ -n "$2" ]; then
         sq 'DELETE FROM settings WHERE setting="'"$2"'"'
     fi
+    exit
     ;;
 -i)
     # use indicator files
@@ -67,6 +89,7 @@ case "$1" in
     else
         echo "$2" >~/.config/instantconf/"$1"
     fi
+    exit
     ;;
 -r)
     shift 1
@@ -83,12 +106,32 @@ case "$1" in
         exit 1
     fi
     ;;
-all)
+-a)
     sq 'SELECT * FROM SETTINGS'
+    exit
+    ;;
+-e)
+    if [ -n "$2" ]; then
+        cp ~/.config/instantos/settings.db "$2"
+    else
+        echo "usage: iconf -e <output>"
+    fi
+    exit
+    ;;
+
+-i)
+    if [ -n "$2" ]; then
+        cp "$2" ~/.config/instantos/settings.db
+        echo 'backed up old settings to  ~/.config/instantos/settings."$(date '+%Y_%m_%d_%H_%M')".db'
+        cp ~/.config/instantos/settings."$(date '+%Y_%m_%d_%H_%M')".db
+    else
+        echo "usage: iconf -i <file>"
+    fi
     exit
     ;;
 "")
     echohelp
+    exit
     ;;
 esac
 
