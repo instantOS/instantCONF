@@ -50,7 +50,7 @@ case "$1" in
 -d)
     # delete an option
     if [ -n "$2" ]; then
-        sq 'DELETE FROM settings WHERE setting="'"$2"'"'
+        sq "DELETE FROM settings WHERE setting='$2'"
     fi
     exit
     ;;
@@ -145,9 +145,9 @@ fi
 
 if [ -n "$2" ]; then
     if [[ $2 == *'"'* ]]; then
-        sq 'REPLACE INTO settings (setting, value) VALUES ("'"$1"'", "'"$(sed 's/"/""/g' <<<"$2")"'")'
+        sq "REPLACE INTO settings (setting, value) VALUES ('$1', '$(sed 's/"/""/g' <<<"$2")')"
     else
-        sq 'REPLACE INTO settings (setting, value) VALUES ("'"$1"'", "'"$2"'")'
+        sq "REPLACE INTO settings (setting, value) VALUES ('$1', '$2')"
     fi
 else
     if [ -z "$BINARY" ]; then
@@ -159,7 +159,7 @@ else
             SETTING="$1"
         fi
 
-        VALUE=$(sq 'SELECT value FROM settings WHERE setting="'"$SETTING"'"')
+        VALUE=$(sq "SELECT value FROM settings WHERE setting='$SETTING'")
         if [ -z "$VALUE" ]; then
             if [ -z "$DEFAULT" ]; then
                 exit 1
@@ -170,7 +170,7 @@ else
             echo "$VALUE"
         fi
     else
-        VALUE=$(sq 'SELECT value FROM settings WHERE setting="'"$1"'"')
+        VALUE=$(sq "SELECT value FROM settings WHERE setting='$1'")
         if [ "$VALUE" = "1" ]; then
             exit 0
         else
