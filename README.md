@@ -11,7 +11,7 @@
 # instantCONF
 
 ![Discord](https://img.shields.io/discord/683782260071071764)
-![Maintenance](https://img.shields.io/maintenance/yes/2020)
+![Maintenance](https://img.shields.io/maintenance/yes/2025)
 
 instantCONF is a simple configuration system that doesn't require a settings daemon or anything fancy to run and can easily be scripted
 
@@ -41,6 +41,14 @@ set a binary option.
 ```
 iconf -i optionname 0/1
 ```
+
+# Roadmap
+
+- look at alternatives to sqlite
+    - dconf?
+    - plaintext?
+        - parse every time?
+        - background job which keeps in memory?
 
 --------
 ## instantOS is still in early beta, contributions always welcome
